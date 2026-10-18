@@ -317,7 +317,11 @@ func migrateConfig(
 		tbl.Append("deprecated-parameter", "`case` is no longer supported. Use `structname` to specify the name and exported-ness of the output mocks.")
 	}
 	v3.ConfigFile = v2Config.Config
-	v3.Cpuprofile = v2Config.Cpuprofile
+	if v2Config.Profile != nil && *v2Config.Profile != "" {
+		v3.Cpuprofile = v2Config.Profile
+	} else {
+		v3.Cpuprofile = v2Config.Cpuprofile
+	}
 	v3.Dir = v2Config.Dir
 	if v2Config.DisableConfigSearch != nil {
 		tbl.Append("deprecated-parameter", "`disable-config-search` is permanently disabled in v3.")
@@ -435,6 +439,7 @@ type V2Config struct {
 	Case                        *string        `yaml:"case"`             // DELETED: caseness is specified using template variables/functions in `structname`.
 	Config                      *string        `yaml:"config"`
 	Cpuprofile                  *string        `yaml:"cpuprofile"`
+	Profile                     *string        `yaml:"profile"`
 	Dir                         *string        `yaml:"dir"`
 	DisableConfigSearch         *bool          `yaml:"disable-config-search"` // DEPRECATED: permanently set to `false` in v3
 	DisableDeprecationWarnings  *bool          `yaml:"disable-deprecation-warnings"`
